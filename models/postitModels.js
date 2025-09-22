@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const noteSchema = new mongoose.Schema({
+const postitSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -17,3 +17,5 @@ const noteSchema = new mongoose.Schema({
     type: Date,
   },
 });
+
+module.exports = mongoose.model("PostIt", postitSchema);
