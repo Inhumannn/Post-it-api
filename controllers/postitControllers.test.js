@@ -1,4 +1,8 @@
-const { getAllPostIt, createPostIt } = require("./postitControllers");
+const {
+  getAllPostIt,
+  createPostIt,
+  updatePostIt,
+} = require("./postitControllers");
 const PostIt = require("../models/postitModels");
 jest.mock("../models/postitModels.js");
 
@@ -61,6 +65,46 @@ describe("Post-It Controllers", () => {
       await createPostIt(req, res);
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({ error: "Validation error" });
+    });
+  });
+  describe("updatePostIt", () => {
+    it("should update post it", async () => {
+      const mockPostIt = {
+        _id: "1",
+        title: "old post it",
+        text: "lorem12",
+        save: jest.fn().mockResolvedValue({
+          _id: "1",
+          title: "update post it",
+          text: "lorem13",
+        }),
+      };
+      req.params.id = "1";
+      req.body = { title: "update post it", text: "lorem13" };
+      PostIt.findById.mockResolvedValue(mockPostIt);
+      await updatePostIt(req, res);
+      expect(PostIt.findById).toHaveBeenCalledWith("1");
+      expect(mockPostIt.title).toBe("update post it");
+      expect(mockPostIt.text).toBe("lorem13");
+      expect(mockPostIt.save).toHaveBeenCalled();
+    });
+    it("should return 404 when post it not found", async () => {
+      req.params.id = "1";
+      PostIt.findById.mockResolvedValue(null);
+      await updatePostIt(req, res);
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({ error: "Post it not found" });
+    });
+    it("should handle save errors", async () => {
+      const mockPostIt = {
+        save: jest.fn().mockRejectedValue(new Error("Save error")),
+      };
+      req.params.id = "1";
+      req.body = { title: "post it to be updated", text: "lorem13" };
+      PostIt.findById.mockResolvedValue(mockPostIt);
+      await updatePostIt(req, res);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({ error: "Save error" });
     });
   });
 });
