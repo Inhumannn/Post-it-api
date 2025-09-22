@@ -1,4 +1,4 @@
-const { getAllPostIt } = require("./postitControllers");
+const { getAllPostIt, createPostIt } = require("./postitControllers");
 const PostIt = require("../models/postitModels");
 jest.mock("../models/postitModels.js");
 
@@ -36,6 +36,31 @@ describe("Post-It Controllers", () => {
       await getAllPostIt(req, res);
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({ error: "Database error" });
+    });
+  });
+  describe("createNewPostIt", () => {
+    it("should create new post it", async () => {
+      const postItData = { title: "New Post It", text: "Lorem12" };
+      const mockPostIt = { _id: "1", ...postItData };
+      req.body = postItData;
+
+      const mockSave = jest.fn().mockResolvedValue(mockPostIt);
+      PostIt.mockImplementation(() => ({ save: mockSave }));
+      await createPostIt(req, res);
+      expect(PostIt).toHaveBeenCalledWith(postItData);
+      expect(mockSave).toHaveBeenCalled();
+      expect(res.status).toHaveBeenCalledWith(201);
+      expect(res.json).toHaveBeenCalledWith(mockPostIt);
+    });
+    it("should handle validation errors", async () => {
+      req.body = { title: "New Post It", text: "Lorem12" };
+      const mockSave = jest
+        .fn()
+        .mockRejectedValue(new Error("Validation error"));
+      PostIt.mockImplementation(() => ({ save: mockSave }));
+      await createPostIt(req, res);
+      expect(res.status).toHaveBeenCalledWith(400);
+      expect(res.json).toHaveBeenCalledWith({ error: "Validation error" });
     });
   });
 });
