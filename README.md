@@ -10,10 +10,10 @@
 
 ## Les endpoints
 
-GET /todo -- Pour récupérer toutes les notes
-POST /todo -- Créer une notes
-PATCH /todo/:id -- Modifier une notes
-DELETE /todo:/id -- Supprime une notes
+- GET `/todo` -- Pour récupérer toutes les notes
+- POST `/todo` -- Créer une notes
+- PATCH `/todo/:id` -- Modifier une notes
+- DELETE `/todo/:id` -- Supprime une notes
 
 ## Schema de données
 
