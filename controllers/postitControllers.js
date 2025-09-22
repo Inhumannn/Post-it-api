@@ -27,19 +27,32 @@ exports.createPostIt = async (req, res) => {
 
 exports.updatePostIt = async (req, res) => {
   try {
-    const postIts = await PostIt.findById(req.params.id);
-    if (postIts === null) {
+    const postIt = await PostIt.findById(req.params.id);
+    if (postIt === null) {
       res.status(404).json({ error: "Post it not found" });
     }
     if (req.body.title != null) {
-      postIts.title = req.body.title;
+      postIt.title = req.body.title;
     }
     if (req.body.text != null) {
-      postIts.text = req.body.text;
+      postIt.text = req.body.text;
     }
-    const updatePostIt = await postIts.save();
+    const updatePostIt = await postIt.save();
     res.json(updatePostIt);
   } catch (e) {
     res.status(400).json({ error: e.message });
+  }
+};
+
+exports.deletePostIt = async (req, res) => {
+  try {
+    const postIt = await PostIt.findById(req.params.id);
+    if (postIt == null) {
+      res.status(404).json({ error: "Post it not found" });
+    }
+    await postIt.deleteOne();
+    res.json({ message: "Delete post it" });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
   }
 };

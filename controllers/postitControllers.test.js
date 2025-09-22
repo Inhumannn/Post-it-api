@@ -2,6 +2,7 @@ const {
   getAllPostIt,
   createPostIt,
   updatePostIt,
+  deletePostIt,
 } = require("./postitControllers");
 const PostIt = require("../models/postitModels");
 jest.mock("../models/postitModels.js");
@@ -106,5 +107,36 @@ describe("Post-It Controllers", () => {
       expect(res.status).toHaveBeenCalledWith(400);
       expect(res.json).toHaveBeenCalledWith({ error: "Save error" });
     });
+  });
+  describe("deletePostIt", () => {
+    it("should delete post it", async () => {
+      const mockPostIt = {
+        _id: "1",
+        deleteOne: jest.fn().mockResolvedValue(),
+      };
+      req.params.id = "1";
+      PostIt.findById.mockResolvedValue(mockPostIt);
+      await deletePostIt(req, res);
+      expect(PostIt.findById).toHaveBeenCalledWith("1");
+      expect(mockPostIt.deleteOne).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith({ message: "Delete post it" });
+    });
+  });
+  it("should return 404 when post it not found", async () => {
+    req.params.id = "1";
+    PostIt.findById.mockResolvedValue(null);
+    await deletePostIt(req, res);
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ error: "Post it not found" });
+  });
+  it("should handle delete errors", async () => {
+    const mockPostIt = {
+      deleteOne: jest.fn().mockRejectedValue(new Error("Delete error")),
+    };
+    req.params.id = "1";
+    PostIt.findById.mockResolvedValue(mockPostIt);
+    await deletePostIt(req, res);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ error: "Delete error" });
   });
 });
