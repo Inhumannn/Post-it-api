@@ -1,24 +1,24 @@
 # Notes Rapides (Post-it virtuels)
 
 - **Concept :** L'application web la plus classique pour débuter.
-- **Données :** Tâche (id, texte).
+- **Données :** Tâche (id, title, text).
 - **Opérations CRUD :**
-  - `CREATE` : Ajouter une nouvelle notes.
-  - `READ` : Afficher toutes les notes.
-  - `UPDATE` : Modifier une notes.
-  - `DELETE` : Supprimer une notes.
+  - _CREATE_ : Ajouter une nouvelle note.
+  - _READ_ : Afficher toutes les notes.
+  - _UPDATE_ : Modifier une note.
+  - _DELETE_ : Supprimer une note.
 
 ## Les endpoints
 
-- GET `/todo` -- Pour récupérer toutes les notes
-- POST `/todo` -- Créer une notes
-- PATCH `/todo/:id` -- Modifier une notes
-- DELETE `/todo/:id` -- Supprime une notes
+- _GET_ `/todo` -- Pour récupérer toutes les note
+- _POST_ `/todo` -- Créer une note
+- _PATCH_ `/todo/:id` -- Modifier une note
+- _DELETE_ `/todo/:id` -- Supprime une note
 
 ## Schema de données
 
-- ID : Identifiant unique de l'élément de liste (String)
-- title : Titre de l'élément de liste (String, require)
-- text : Contenu textuel de l'élément de liste (String, require)
-- creationDate : Quand l'élément de liste à été créée (Date, Require)
-- completedDate : Quand l'élément à été marqué comme validé (Data)
+- _ID_ : Identifiant unique de la note (String)
+- _title_ : Titre de la note (String, require)
+- _text_ : Contenu textuel de la note (String, require)
+- _creationDate_ : Quand la note à été créée (Date, Require)
+- _completedDate_ : Quand la note à été marqué comme validé (Data)
